@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>릴렉스틱 스마트스토어 주차별 분석</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f0f2f5;color:#222;}
+  .top-bar{background:#0D3B6E;color:white;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .top-bar h1{font-size:20px;font-weight:700;}
+  .top-bar .sub{font-size:13px;opacity:0.75;margin-top:4px;}
+  .badge{background:#1abc9c;border-radius:4px;padding:3px 10px;font-size:12px;}
+  .container{max-width:1400px;margin:0 auto;padding:24px 16px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  .kpi-card{background:white;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  .kpi-card .label{font-size:12px;color:#888;margin-bottom:6px;}
+  .kpi-card .value{font-size:22px;font-weight:700;color:#0D3B6E;}
+  .kpi-card .sub{font-size:12px;color:#aaa;margin-top:4px;}
+  .section{background:white;border-radius:10px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:20px;}
+  .section-title{font-size:15px;font-weight:700;margin-bottom:16px;color:#0D3B6E;border-left:4px solid #1abc9c;padding-left:10px;}
+  .chart-wrap{position:relative;height:320px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#f5f7fa;padding:8px 10px;text-align:right;font-weight:600;color:#555;border-bottom:2px solid #e0e0e0;white-space:nowrap;}
+  th:first-child{text-align:left;min-width:180px;}
+  td{padding:7px 10px;text-align:right;border-bottom:1px solid #f0f0f0;white-space:nowrap;}
+  td:first-child{text-align:left;}
+  tr:hover td{background:#f9fbfd;}
+  .prod-name{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .sum-row td{background:#f0f4f8;font-weight:700;border-top:2px solid #d0d8e4;}
+  .sum-cell{color:#0D3B6E;}
+  @media(max-width:768px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div>
+    <h1>릴렉스틱 · 스마트스토어 주차별 분석</h1>
+    <div class="sub">주차별 매출 · 건수 · 물품수 &nbsp;|&nbsp; 2026년 1월 1일 ~ 4월 14일</div>
+  </div>
+  <span class="badge">주차별 · 4월은 14일까지</span>
+</div>
+
+<div class="container">
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="label">릴렉스틱 전체 누적 매출</div>
+    <div class="value">494,402,204원</div>
+    <div class="sub">판매 9,419건</div>
+  </div>
+    <div class="kpi-card">
+    <div class="label">오리지널</div>
+    <div class="value">330,442,934원</div>
+    <div class="sub">6,227건</div>
+  </div>  <div class="kpi-card">
+    <div class="label">롱</div>
+    <div class="value">96,745,460원</div>
+    <div class="sub">1,444건</div>
+  </div>  <div class="kpi-card">
+    <div class="label">숏</div>
+    <div class="value">16,389,100원</div>
+    <div class="sub">400건</div>
+  </div>
+</div>
+<div class="kpi-grid">
+    <div class="kpi-card">
+    <div class="label">볼</div>
+    <div class="value">31,718,110원</div>
+    <div class="sub">854건</div>
+  </div>  <div class="kpi-card">
+    <div class="label">오리지널 루피</div>
+    <div class="value">7,680,200원</div>
+    <div class="sub">329건</div>
+  </div>  <div class="kpi-card">
+    <div class="label">볼 루피</div>
+    <div class="value">11,426,400원</div>
+    <div class="sub">165건</div>
+  </div>
+</div>
+
+<!-- 매출 차트 -->
+<div class="section">
+  <div class="section-title">제품별 주차별 매출 추이</div>
+  <div class="chart-wrap"><canvas id="revChart"></canvas></div>
+</div>
+
+  <div class="section">
+    <div class="section-title">제품별 주차별 매출 (원)</div>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>제품</th><th>12/29~01/04</th><th>01/05~01/11</th><th>01/12~01/18</th><th>01/19~01/25</th><th>01/26~02/01</th><th>02/02~02/08</th><th>02/09~02/15</th><th>02/16~02/22</th><th>02/23~03/01</th><th>03/02~03/08</th><th>03/09~03/15</th><th>03/16~03/22</th><th>03/23~03/29</th><th>03/30~04/05</th><th>04/06~04/12</th><th>04/13~04/14</th></tr></thead>
+      <tbody><tr><td class='prod-name'><span class='dot' style='background:#2ED5A3'></span>오리지널<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.4 7.1,2.0 12.1,3.0 17.2,8.2 22.3,6.2 27.3,7.9 32.4,9.2 37.5,8.0 42.5,8.4 47.6,9.9 52.7,9.9 57.7,8.7 62.8,7.0 67.9,9.7 72.9,7.2 78.0,16.2 78,20" fill="#2ED5A333"/><polyline points="2.0,10.4 7.1,2.0 12.1,3.0 17.2,8.2 22.3,6.2 27.3,7.9 32.4,9.2 37.5,8.0 42.5,8.4 47.6,9.9 52.7,9.9 57.7,8.7 62.8,7.0 67.9,9.7 72.9,7.2 78.0,16.2" fill="none" stroke="#2ED5A3" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>16,779,098</td><td>31,624,670</td><td>29,847,197</td><td>20,752,825</td><td>24,275,733</td><td>21,267,278</td><td>18,921,086</td><td>21,165,832</td><td>20,341,269</td><td>17,767,269</td><td>17,803,823</td><td>19,823,905</td><td>22,785,814</td><td>18,094,725</td><td>22,504,310</td><td>6,688,100</td></tr><tr><td class='prod-name'><span class='dot' style='background:#4E91D8'></span>롱<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.8 7.1,2.0 12.1,6.6 17.2,11.0 22.3,11.2 27.3,10.1 32.4,10.5 37.5,7.4 42.5,8.2 47.6,10.0 52.7,7.8 57.7,12.1 62.8,10.1 67.9,9.1 72.9,4.9 78.0,14.2 78,20" fill="#4E91D833"/><polyline points="2.0,10.8 7.1,2.0 12.1,6.6 17.2,11.0 22.3,11.2 27.3,10.1 32.4,10.5 37.5,7.4 42.5,8.2 47.6,10.0 52.7,7.8 57.7,12.1 62.8,10.1 67.9,9.1 72.9,4.9 78.0,14.2" fill="none" stroke="#4E91D8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>5,107,100</td><td>10,010,000</td><td>7,468,000</td><td>5,006,000</td><td>4,905,000</td><td>5,503,000</td><td>5,267,000</td><td>7,029,000</td><td>6,545,000</td><td>5,571,000</td><td>6,773,000</td><td>4,386,000</td><td>5,478,000</td><td>6,075,950</td><td>8,414,410</td><td>3,207,000</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FF8C42'></span>숏<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,9.8 7.1,4.9 12.1,2.0 17.2,9.2 22.3,7.9 27.3,6.8 32.4,11.7 37.5,5.4 42.5,2.4 47.6,2.4 52.7,6.1 57.7,7.8 62.8,9.8 67.9,8.2 72.9,5.8 78.0,15.0 78,20" fill="#FF8C4233"/><polyline points="2.0,9.8 7.1,4.9 12.1,2.0 17.2,9.2 22.3,7.9 27.3,6.8 32.4,11.7 37.5,5.4 42.5,2.4 47.6,2.4 52.7,6.1 57.7,7.8 62.8,9.8 67.9,8.2 72.9,5.8 78.0,15.0" fill="none" stroke="#FF8C42" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>813,000</td><td>1,211,000</td><td>1,440,000</td><td>866,500</td><td>967,000</td><td>1,056,000</td><td>668,000</td><td>1,165,000</td><td>1,409,000</td><td>1,412,000</td><td>1,109,000</td><td>974,000</td><td>815,000</td><td>942,000</td><td>1,139,600</td><td>402,000</td></tr><tr><td class='prod-name'><span class='dot' style='background:#C77DFF'></span>볼<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,14.1 7.1,7.3 12.1,7.1 17.2,11.1 22.3,13.2 27.3,9.1 32.4,10.6 37.5,15.9 42.5,11.8 47.6,15.2 52.7,12.6 57.7,9.1 62.8,8.0 67.9,11.4 72.9,2.0 78.0,14.5 78,20" fill="#C77DFF33"/><polyline points="2.0,14.1 7.1,7.3 12.1,7.1 17.2,11.1 22.3,13.2 27.3,9.1 32.4,10.6 37.5,15.9 42.5,11.8 47.6,15.2 52.7,12.6 57.7,9.1 62.8,8.0 67.9,11.4 72.9,2.0 78.0,14.5" fill="none" stroke="#C77DFF" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>1,282,900</td><td>2,731,400</td><td>2,772,900</td><td>1,919,200</td><td>1,469,400</td><td>2,341,300</td><td>2,031,900</td><td>886,300</td><td>1,765,900</td><td>1,039,400</td><td>1,591,500</td><td>2,355,400</td><td>2,589,000</td><td>1,866,000</td><td>3,883,510</td><td>1,192,100</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FF6B6B'></span>오리지널 루피<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.1 72.9,2.0 78.0,15.4 78,20" fill="#FF6B6B33"/><polyline points="2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.1 72.9,2.0 78.0,15.4" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>1,372,000</td><td>5,032,000</td><td>1,276,200</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FFD166'></span>볼 루피<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,14.8 72.9,2.0 78.0,15.9 78,20" fill="#FFD16633"/><polyline points="2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,14.8 72.9,2.0 78.0,15.9" fill="none" stroke="#FFD166" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>2,165,000</td><td>7,548,400</td><td>1,713,000</td></tr><tr style='background:#e8eef6;font-weight:700;border-top:2px solid #b0c4de;'><td class='prod-name'><span class='dot' style='background:#0D3B6E'></span>릴렉스틱 합계<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.5 7.1,2.0 12.1,3.7 17.2,8.8 22.3,7.3 27.3,8.3 32.4,9.6 37.5,7.7 42.5,8.1 47.6,9.6 52.7,9.2 57.7,9.4 62.8,7.8 67.9,8.9 72.9,4.4 78.0,15.1 78,20" fill="#0D3B6E33"/><polyline points="2.0,10.5 7.1,2.0 12.1,3.7 17.2,8.8 22.3,7.3 27.3,8.3 32.4,9.6 37.5,7.7 42.5,8.1 47.6,9.6 52.7,9.2 57.7,9.4 62.8,7.8 67.9,8.9 72.9,4.4 78.0,15.1" fill="none" stroke="#0D3B6E" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td class='sum-cell'>22,699,198</td><td class='sum-cell'>42,845,670</td><td class='sum-cell'>38,755,197</td><td class='sum-cell'>26,625,325</td><td class='sum-cell'>30,147,733</td><td class='sum-cell'>27,826,278</td><td class='sum-cell'>24,856,086</td><td class='sum-cell'>29,359,832</td><td class='sum-cell'>28,295,269</td><td class='sum-cell'>24,750,269</td><td class='sum-cell'>25,685,823</td><td class='sum-cell'>25,183,905</td><td class='sum-cell'>29,078,814</td><td class='sum-cell'>26,484,675</td><td class='sum-cell'>37,090,320</td><td class='sum-cell'>11,573,300</td></tr><tr class='sum-row'><td>전체 합계</td><td class='sum-cell'>23,982,098</td><td class='sum-cell'>45,577,070</td><td class='sum-cell'>41,528,097</td><td class='sum-cell'>28,544,525</td><td class='sum-cell'>31,617,133</td><td class='sum-cell'>30,167,578</td><td class='sum-cell'>26,887,986</td><td class='sum-cell'>30,246,132</td><td class='sum-cell'>30,061,169</td><td class='sum-cell'>25,789,669</td><td class='sum-cell'>27,277,323</td><td class='sum-cell'>27,539,305</td><td class='sum-cell'>31,667,814</td><td class='sum-cell'>30,515,675</td><td class='sum-cell'>48,522,230</td><td class='sum-cell'>14,478,400</td></tr></tbody>
+    </table>
+    </div>
+  </div>
+
+<!-- 건수 차트 -->
+<div class="section">
+  <div class="section-title">제품별 주차별 판매 건수 추이</div>
+  <div class="chart-wrap"><canvas id="cntChart"></canvas></div>
+</div>
+
+  <div class="section">
+    <div class="section-title">제품별 주차별 판매 건수</div>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>제품</th><th>12/29~01/04</th><th>01/05~01/11</th><th>01/12~01/18</th><th>01/19~01/25</th><th>01/26~02/01</th><th>02/02~02/08</th><th>02/09~02/15</th><th>02/16~02/22</th><th>02/23~03/01</th><th>03/02~03/08</th><th>03/09~03/15</th><th>03/16~03/22</th><th>03/23~03/29</th><th>03/30~04/05</th><th>04/06~04/12</th><th>04/13~04/14</th></tr></thead>
+      <tbody><tr><td class='prod-name'><span class='dot' style='background:#2ED5A3'></span>오리지널<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.1 7.1,2.0 12.1,2.9 17.2,8.2 22.3,5.2 27.3,7.2 32.4,9.3 37.5,7.2 42.5,7.7 47.6,9.6 52.7,9.5 57.7,8.4 62.8,6.2 67.9,9.4 72.9,6.3 78.0,16.0 78,20" fill="#2ED5A333"/><polyline points="2.0,10.1 7.1,2.0 12.1,2.9 17.2,8.2 22.3,5.2 27.3,7.2 32.4,9.3 37.5,7.2 42.5,7.7 47.6,9.6 52.7,9.5 57.7,8.4 62.8,6.2 67.9,9.4 72.9,6.3 78.0,16.0" fill="none" stroke="#2ED5A3" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>316</td><td>576</td><td>548</td><td>376</td><td>472</td><td>408</td><td>343</td><td>408</td><td>393</td><td>334</td><td>335</td><td>371</td><td>441</td><td>340</td><td>438</td><td>128</td></tr><tr><td class='prod-name'><span class='dot' style='background:#4E91D8'></span>롱<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.7 7.1,2.0 12.1,6.0 17.2,10.8 22.3,9.9 27.3,8.8 32.4,9.9 37.5,6.1 42.5,6.5 47.6,9.4 52.7,7.7 57.7,11.8 62.8,9.4 67.9,8.6 72.9,4.2 78.0,13.9 78,20" fill="#4E91D833"/><polyline points="2.0,10.7 7.1,2.0 12.1,6.0 17.2,10.8 22.3,9.9 27.3,8.8 32.4,9.9 37.5,6.1 42.5,6.5 47.6,9.4 52.7,7.7 57.7,11.8 62.8,9.4 67.9,8.6 72.9,4.2 78.0,13.9" fill="none" stroke="#4E91D8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>73</td><td>141</td><td>110</td><td>72</td><td>79</td><td>88</td><td>79</td><td>109</td><td>106</td><td>83</td><td>96</td><td>64</td><td>83</td><td>89</td><td>124</td><td>48</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FF8C42'></span>숏<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,9.5 7.1,5.5 12.1,4.0 17.2,9.5 22.3,7.5 27.3,7.0 32.4,12.0 37.5,5.5 42.5,3.5 47.6,2.0 52.7,6.5 57.7,8.5 62.8,10.0 67.9,9.5 72.9,4.5 78.0,15.0 78,20" fill="#FF8C4233"/><polyline points="2.0,9.5 7.1,5.5 12.1,4.0 17.2,9.5 22.3,7.5 27.3,7.0 32.4,12.0 37.5,5.5 42.5,3.5 47.6,2.0 52.7,6.5 57.7,8.5 62.8,10.0 67.9,9.5 72.9,4.5 78.0,15.0" fill="none" stroke="#FF8C42" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>21</td><td>29</td><td>32</td><td>21</td><td>25</td><td>26</td><td>16</td><td>29</td><td>33</td><td>36</td><td>27</td><td>23</td><td>20</td><td>21</td><td>31</td><td>10</td></tr><tr><td class='prod-name'><span class='dot' style='background:#C77DFF'></span>볼<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,14.0 7.1,8.9 12.1,8.1 17.2,13.0 22.3,14.7 27.3,10.2 32.4,11.2 37.5,16.0 42.5,14.0 47.6,16.2 52.7,14.9 57.7,12.1 62.8,11.2 67.9,14.1 72.9,2.0 78.0,14.3 78,20" fill="#C77DFF33"/><polyline points="2.0,14.0 7.1,8.9 12.1,8.1 17.2,13.0 22.3,14.7 27.3,10.2 32.4,11.2 37.5,16.0 42.5,14.0 47.6,16.2 52.7,14.9 57.7,12.1 62.8,11.2 67.9,14.1 72.9,2.0 78.0,14.3" fill="none" stroke="#C77DFF" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>41</td><td>76</td><td>81</td><td>48</td><td>36</td><td>67</td><td>60</td><td>27</td><td>41</td><td>26</td><td>35</td><td>54</td><td>60</td><td>40</td><td>123</td><td>39</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FF6B6B'></span>오리지널 루피<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.2 72.9,2.0 78.0,15.7 78,20" fill="#FF6B6B33"/><polyline points="2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.2 72.9,2.0 78.0,15.7" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>58</td><td>219</td><td>52</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FFD166'></span>볼 루피<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.1 72.9,2.0 78.0,15.9 78,20" fill="#FFD16633"/><polyline points="2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.1 72.9,2.0 78.0,15.9" fill="none" stroke="#FFD166" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>30</td><td>110</td><td>25</td></tr><tr style='background:#e8eef6;font-weight:700;border-top:2px solid #b0c4de;'><td class='prod-name'><span class='dot' style='background:#0D3B6E'></span>릴렉스틱 합계<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.9 7.1,3.5 12.1,4.7 17.2,9.6 22.3,7.2 27.3,8.4 32.4,10.3 37.5,7.9 42.5,8.2 47.6,10.0 52.7,9.8 57.7,9.8 62.8,7.9 67.9,8.7 72.9,2.0 78.0,14.7 78,20" fill="#0D3B6E33"/><polyline points="2.0,10.9 7.1,3.5 12.1,4.7 17.2,9.6 22.3,7.2 27.3,8.4 32.4,10.3 37.5,7.9 42.5,8.2 47.6,10.0 52.7,9.8 57.7,9.8 62.8,7.9 67.9,8.7 72.9,2.0 78.0,14.7" fill="none" stroke="#0D3B6E" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td class='sum-cell'>410</td><td class='sum-cell'>746</td><td class='sum-cell'>690</td><td class='sum-cell'>469</td><td class='sum-cell'>576</td><td class='sum-cell'>522</td><td class='sum-cell'>438</td><td class='sum-cell'>546</td><td class='sum-cell'>532</td><td class='sum-cell'>453</td><td class='sum-cell'>458</td><td class='sum-cell'>458</td><td class='sum-cell'>544</td><td class='sum-cell'>508</td><td class='sum-cell'>812</td><td class='sum-cell'>238</td></tr><tr class='sum-row'><td>전체 합계</td><td class='sum-cell'>451</td><td class='sum-cell'>822</td><td class='sum-cell'>771</td><td class='sum-cell'>517</td><td class='sum-cell'>612</td><td class='sum-cell'>589</td><td class='sum-cell'>498</td><td class='sum-cell'>573</td><td class='sum-cell'>573</td><td class='sum-cell'>479</td><td class='sum-cell'>493</td><td class='sum-cell'>512</td><td class='sum-cell'>604</td><td class='sum-cell'>578</td><td class='sum-cell'>1,045</td><td class='sum-cell'>302</td></tr></tbody>
+    </table>
+    </div>
+  </div>
+
+<!-- 물품수 차트 -->
+<div class="section">
+  <div class="section-title">제품별 주차별 판매 물품수 추이</div>
+  <div class="chart-wrap"><canvas id="qtyChart"></canvas></div>
+</div>
+
+  <div class="section">
+    <div class="section-title">제품별 주차별 판매 물품수</div>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>제품</th><th>12/29~01/04</th><th>01/05~01/11</th><th>01/12~01/18</th><th>01/19~01/25</th><th>01/26~02/01</th><th>02/02~02/08</th><th>02/09~02/15</th><th>02/16~02/22</th><th>02/23~03/01</th><th>03/02~03/08</th><th>03/09~03/15</th><th>03/16~03/22</th><th>03/23~03/29</th><th>03/30~04/05</th><th>04/06~04/12</th><th>04/13~04/14</th></tr></thead>
+      <tbody><tr><td class='prod-name'><span class='dot' style='background:#2ED5A3'></span>오리지널<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.4 7.1,2.0 12.1,3.1 17.2,8.6 22.3,6.5 27.3,8.1 32.4,9.4 37.5,8.1 42.5,8.6 47.6,10.1 52.7,10.2 57.7,8.9 62.8,7.2 67.9,9.9 72.9,6.6 78.0,16.0 78,20" fill="#2ED5A333"/><polyline points="2.0,10.4 7.1,2.0 12.1,3.1 17.2,8.6 22.3,6.5 27.3,8.1 32.4,9.4 37.5,8.1 42.5,8.6 47.6,10.1 52.7,10.2 57.7,8.9 62.8,7.2 67.9,9.9 72.9,6.6 78.0,16.0" fill="none" stroke="#2ED5A3" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>355</td><td>668</td><td>628</td><td>423</td><td>502</td><td>442</td><td>392</td><td>440</td><td>423</td><td>369</td><td>364</td><td>411</td><td>474</td><td>375</td><td>496</td><td>148</td></tr><tr><td class='prod-name'><span class='dot' style='background:#4E91D8'></span>롱<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.9 7.1,2.0 12.1,6.8 17.2,11.4 22.3,11.6 27.3,10.7 32.4,11.0 37.5,7.9 42.5,8.9 47.6,10.4 52.7,8.3 57.7,12.5 62.8,10.7 67.9,9.5 72.9,4.5 78.0,14.1 78,20" fill="#4E91D833"/><polyline points="2.0,10.9 7.1,2.0 12.1,6.8 17.2,11.4 22.3,11.6 27.3,10.7 32.4,11.0 37.5,7.9 42.5,8.9 47.6,10.4 52.7,8.3 57.7,12.5 62.8,10.7 67.9,9.5 72.9,4.5 78.0,14.1" fill="none" stroke="#4E91D8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>96</td><td>189</td><td>139</td><td>90</td><td>88</td><td>98</td><td>95</td><td>127</td><td>117</td><td>101</td><td>123</td><td>79</td><td>98</td><td>110</td><td>163</td><td>62</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FF8C42'></span>숏<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,9.8 7.1,4.9 12.1,2.0 17.2,9.3 22.3,7.8 27.3,6.9 32.4,11.7 37.5,5.4 42.5,2.5 47.6,2.5 52.7,6.4 57.7,7.8 62.8,9.8 67.9,8.3 72.9,4.4 78.0,14.6 78,20" fill="#FF8C4233"/><polyline points="2.0,9.8 7.1,4.9 12.1,2.0 17.2,9.3 22.3,7.8 27.3,6.9 32.4,11.7 37.5,5.4 42.5,2.5 47.6,2.5 52.7,6.4 57.7,7.8 62.8,9.8 67.9,8.3 72.9,4.4 78.0,14.6" fill="none" stroke="#FF8C42" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>21</td><td>31</td><td>37</td><td>22</td><td>25</td><td>27</td><td>17</td><td>30</td><td>36</td><td>36</td><td>28</td><td>25</td><td>21</td><td>24</td><td>32</td><td>11</td></tr><tr><td class='prod-name'><span class='dot' style='background:#C77DFF'></span>볼<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,14.3 7.1,8.0 12.1,7.8 17.2,12.9 22.3,14.8 27.3,10.0 32.4,11.1 37.5,16.1 42.5,13.7 47.6,16.4 52.7,14.2 57.7,11.6 62.8,10.7 67.9,13.1 72.9,2.0 78.0,14.4 78,20" fill="#C77DFF33"/><polyline points="2.0,14.3 7.1,8.0 12.1,7.8 17.2,12.9 22.3,14.8 27.3,10.0 32.4,11.1 37.5,16.1 42.5,13.7 47.6,16.4 52.7,14.2 57.7,11.6 62.8,10.7 67.9,13.1 72.9,2.0 78.0,14.4" fill="none" stroke="#C77DFF" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>44</td><td>93</td><td>94</td><td>55</td><td>40</td><td>77</td><td>69</td><td>30</td><td>49</td><td>28</td><td>45</td><td>65</td><td>72</td><td>53</td><td>139</td><td>43</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FF6B6B'></span>오리지널 루피<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.3 72.9,2.0 78.0,15.7 78,20" fill="#FF6B6B33"/><polyline points="2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.3 72.9,2.0 78.0,15.7" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>58</td><td>220</td><td>53</td></tr><tr><td class='prod-name'><span class='dot' style='background:#FFD166'></span>볼 루피<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.1 72.9,2.0 78.0,15.9 78,20" fill="#FFD16633"/><polyline points="2.0,20.0 7.1,20.0 12.1,20.0 17.2,20.0 22.3,20.0 27.3,20.0 32.4,20.0 37.5,20.0 42.5,20.0 47.6,20.0 52.7,20.0 57.7,20.0 62.8,20.0 67.9,15.1 72.9,2.0 78.0,15.9" fill="none" stroke="#FFD166" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>30</td><td>110</td><td>25</td></tr><tr style='background:#e8eef6;font-weight:700;border-top:2px solid #b0c4de;'><td class='prod-name'><span class='dot' style='background:#0D3B6E'></span>릴렉스틱 합계<svg width="80" height="22" style="margin-left:8px;vertical-align:middle;"><polygon points="2,20 2.0,10.7 7.1,2.5 12.1,4.1 17.2,9.4 22.3,7.8 27.3,8.8 32.4,10.0 37.5,8.2 42.5,8.6 47.6,10.0 52.7,9.8 57.7,9.8 62.8,8.3 67.9,8.8 72.9,2.0 78.0,14.6 78,20" fill="#0D3B6E33"/><polyline points="2.0,10.7 7.1,2.5 12.1,4.1 17.2,9.4 22.3,7.8 27.3,8.8 32.4,10.0 37.5,8.2 42.5,8.6 47.6,10.0 52.7,9.8 57.7,9.8 62.8,8.3 67.9,8.8 72.9,2.0 78.0,14.6" fill="none" stroke="#0D3B6E" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></td><td class='sum-cell'>472</td><td class='sum-cell'>888</td><td class='sum-cell'>804</td><td class='sum-cell'>535</td><td class='sum-cell'>615</td><td class='sum-cell'>567</td><td class='sum-cell'>504</td><td class='sum-cell'>597</td><td class='sum-cell'>576</td><td class='sum-cell'>506</td><td class='sum-cell'>515</td><td class='sum-cell'>515</td><td class='sum-cell'>593</td><td class='sum-cell'>567</td><td class='sum-cell'>911</td><td class='sum-cell'>274</td></tr><tr class='sum-row'><td>전체 합계</td><td class='sum-cell'>516</td><td class='sum-cell'>981</td><td class='sum-cell'>898</td><td class='sum-cell'>590</td><td class='sum-cell'>655</td><td class='sum-cell'>644</td><td class='sum-cell'>573</td><td class='sum-cell'>627</td><td class='sum-cell'>625</td><td class='sum-cell'>534</td><td class='sum-cell'>560</td><td class='sum-cell'>580</td><td class='sum-cell'>665</td><td class='sum-cell'>650</td><td class='sum-cell'>1,160</td><td class='sum-cell'>342</td></tr></tbody>
+    </table>
+    </div>
+  </div>
+
+<!-- 인크리멘탈 분석 -->
+
+<div class="section">
+  <div class="section-title">릴렉스틱 오리지널_루피 출시 인크리멘탈 분석</div>
+  <div style="background:#fffbf0;border-left:4px solid #FFD166;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#555;line-height:1.8;">
+    <strong style="color:#e67e22;">출시 시점: 2026년 3월 30일 (03/30주차)</strong><br>
+    기준선: 출시 전 13주 평균 릴렉스틱(오리지널+숏+롱) 주당 매출 <strong>28,931,492원</strong><br>
+    인크리멘탈 = (출시 후 베이스 매출 + 루피 매출) − 출시 전 평균 &nbsp;·&nbsp; 베이스 변화 = 오리지널+숏+롱이 얼마나 줄었는지(카니발라이제이션)
+  </div>
+
+  <!-- 인크리멘탈 차트 -->
+  <div class="chart-wrap" style="margin-bottom:24px;"><canvas id="incrChart"></canvas></div>
+
+  <!-- 인크리멘탈 테이블 -->
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">주차</th>
+        <th>출시 전 평균 (기준선)</th>
+        <th>베이스 매출<br><small style="font-weight:400;color:#aaa;">오리지널+숏+롱</small></th>
+        <th>베이스 변화</th>
+        <th>루피 매출</th>
+        <th>루피 기여율</th>
+        <th>합계 매출</th>
+        <th>순 인크리멘탈 (성장률)</th>
+      </tr>
+    </thead>
+    <tbody><tr>
+      <td>03/30~04/05</td>
+      <td>28,931,492</td>
+      <td>25,112,675</td>
+      <td style="color:#e74c3c;font-weight:600;">▼ 3,818,817</td>
+      <td>1,372,000</td>
+      <td style="font-weight:700;color:#FF6B6B;">5.2%</td>
+      <td>26,484,675</td>
+      <td style="color:#e74c3c;font-weight:600;">▼ 2,446,817 <span style="font-size:11px;opacity:0.8;">(-8.5%)</span></td>
+    </tr><tr>
+      <td>04/06~04/12</td>
+      <td>28,931,492</td>
+      <td>32,058,320</td>
+      <td style="color:#1abc9c;font-weight:600;">▲ 3,126,827</td>
+      <td>5,032,000</td>
+      <td style="font-weight:700;color:#FF6B6B;">13.6%</td>
+      <td>37,090,320</td>
+      <td style="color:#1abc9c;font-weight:600;">▲ 8,158,827 <span style="font-size:11px;opacity:0.8;">(+28.2%)</span></td>
+    </tr><tr>
+      <td>04/13~04/14</td>
+      <td>28,931,492</td>
+      <td>10,297,100</td>
+      <td style="color:#e74c3c;font-weight:600;">▼ 18,634,392</td>
+      <td>1,276,200</td>
+      <td style="font-weight:700;color:#FF6B6B;">11.0%</td>
+      <td>11,573,300</td>
+      <td style="color:#e74c3c;font-weight:600;">▼ 17,358,192 <span style="font-size:11px;opacity:0.8;">(-60.0%)</span></td>
+    </tr></tbody>
+  </table>
+  </div>
+  <p style="font-size:11px;color:#aaa;margin-top:10px;">* 기준선은 출시 전 13주 단순 평균이므로 계절성·추세 미반영</p>
+</div>
+
+</div>
+
+<script>
+const wkLabels = ['12/29~01/04', '01/05~01/11', '01/12~01/18', '01/19~01/25', '01/26~02/01', '02/02~02/08', '02/09~02/15', '02/16~02/22', '02/23~03/01', '03/02~03/08', '03/09~03/15', '03/16~03/22', '03/23~03/29', '03/30~04/05', '04/06~04/12', '04/13~04/14'];
+const lineOpts = (suffix) => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{position:'top'} },
+  scales:{ x:{ticks:{maxRotation:60,font:{size:11}}}, y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()+suffix}} }
+});
+new Chart(document.getElementById('revChart'), {
+  type:'line', data:{ labels:wkLabels, datasets:[{"label":"오리지널","data":[16779098, 31624670, 29847197, 20752825, 24275733, 21267278, 18921086, 21165832, 20341269, 17767269, 17803823, 19823905, 22785814, 18094725, 22504310, 6688100],"borderColor":"#2ED5A3","backgroundColor":"#2ED5A322","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"롱","data":[5107100, 10010000, 7468000, 5006000, 4905000, 5503000, 5267000, 7029000, 6545000, 5571000, 6773000, 4386000, 5478000, 6075950, 8414410, 3207000],"borderColor":"#4E91D8","backgroundColor":"#4E91D822","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"숏","data":[813000, 1211000, 1440000, 866500, 967000, 1056000, 668000, 1165000, 1409000, 1412000, 1109000, 974000, 815000, 942000, 1139600, 402000],"borderColor":"#FF8C42","backgroundColor":"#FF8C4222","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"볼","data":[1282900, 2731400, 2772900, 1919200, 1469400, 2341300, 2031900, 886300, 1765900, 1039400, 1591500, 2355400, 2589000, 1866000, 3883510, 1192100],"borderColor":"#C77DFF","backgroundColor":"#C77DFF22","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"오리지널 루피","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1372000, 5032000, 1276200],"borderColor":"#FF6B6B","backgroundColor":"#FF6B6B22","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"볼 루피","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2165000, 7548400, 1713000],"borderColor":"#FFD166","backgroundColor":"#FFD16622","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"릴렉스틱 합계","data":[22699198, 42845670, 38755197, 26625325, 30147733, 27826278, 24856086, 29359832, 28295269, 24750269, 25685823, 25183905, 29078814, 26484675, 37090320, 11573300],"borderColor":"#0D3B6E","backgroundColor":"#0D3B6E22","tension":0.3,"fill":false,"pointRadius":4,"borderWidth":2.5}] }, options:lineOpts('원')
+});
+new Chart(document.getElementById('cntChart'), {
+  type:'line', data:{ labels:wkLabels, datasets:[{"label":"오리지널","data":[316, 576, 548, 376, 472, 408, 343, 408, 393, 334, 335, 371, 441, 340, 438, 128],"borderColor":"#2ED5A3","backgroundColor":"#2ED5A322","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"롱","data":[73, 141, 110, 72, 79, 88, 79, 109, 106, 83, 96, 64, 83, 89, 124, 48],"borderColor":"#4E91D8","backgroundColor":"#4E91D822","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"숏","data":[21, 29, 32, 21, 25, 26, 16, 29, 33, 36, 27, 23, 20, 21, 31, 10],"borderColor":"#FF8C42","backgroundColor":"#FF8C4222","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"볼","data":[41, 76, 81, 48, 36, 67, 60, 27, 41, 26, 35, 54, 60, 40, 123, 39],"borderColor":"#C77DFF","backgroundColor":"#C77DFF22","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"오리지널 루피","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 219, 52],"borderColor":"#FF6B6B","backgroundColor":"#FF6B6B22","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"볼 루피","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 110, 25],"borderColor":"#FFD166","backgroundColor":"#FFD16622","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"릴렉스틱 합계","data":[410, 746, 690, 469, 576, 522, 438, 546, 532, 453, 458, 458, 544, 508, 812, 238],"borderColor":"#0D3B6E","backgroundColor":"#0D3B6E22","tension":0.3,"fill":false,"pointRadius":4,"borderWidth":2.5}] }, options:lineOpts('건')
+});
+new Chart(document.getElementById('qtyChart'), {
+  type:'line', data:{ labels:wkLabels, datasets:[{"label":"오리지널","data":[355, 668, 628, 423, 502, 442, 392, 440, 423, 369, 364, 411, 474, 375, 496, 148],"borderColor":"#2ED5A3","backgroundColor":"#2ED5A322","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"롱","data":[96, 189, 139, 90, 88, 98, 95, 127, 117, 101, 123, 79, 98, 110, 163, 62],"borderColor":"#4E91D8","backgroundColor":"#4E91D822","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"숏","data":[21, 31, 37, 22, 25, 27, 17, 30, 36, 36, 28, 25, 21, 24, 32, 11],"borderColor":"#FF8C42","backgroundColor":"#FF8C4222","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"볼","data":[44, 93, 94, 55, 40, 77, 69, 30, 49, 28, 45, 65, 72, 53, 139, 43],"borderColor":"#C77DFF","backgroundColor":"#C77DFF22","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"오리지널 루피","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 220, 53],"borderColor":"#FF6B6B","backgroundColor":"#FF6B6B22","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"볼 루피","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 110, 25],"borderColor":"#FFD166","backgroundColor":"#FFD16622","tension":0.3,"fill":false,"pointRadius":4,"hidden":true},{"label":"릴렉스틱 합계","data":[472, 888, 804, 535, 615, 567, 504, 597, 576, 506, 515, 515, 593, 567, 911, 274],"borderColor":"#0D3B6E","backgroundColor":"#0D3B6E22","tension":0.3,"fill":false,"pointRadius":4,"borderWidth":2.5}] }, options:lineOpts('개')
+});
+new Chart(document.getElementById('incrChart'), {
+  type:'bar',
+  data:{
+    labels:['12/29~01/04', '01/05~01/11', '01/12~01/18', '01/19~01/25', '01/26~02/01', '02/02~02/08', '02/09~02/15', '02/16~02/22', '02/23~03/01', '03/02~03/08', '03/09~03/15', '03/16~03/22', '03/23~03/29', '03/30~04/05', '04/06~04/12', '04/13~04/14'],
+    datasets:[
+      {"label":"베이스 (오리지널+숏+롱)","data":[22699198, 42845670, 38755197, 26625325, 30147733, 27826278, 24856086, 29359832, 28295269, 24750269, 25685823, 25183905, 29078814, 25112675, 32058320, 10297100],"backgroundColor":"#4E91D822","borderColor":"#4E91D8","borderWidth":1.5,"stack":"s"},
+      {"label":"루피 매출","data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1372000, 5032000, 1276200],"backgroundColor":"#FF6B6B88","borderColor":"#FF6B6B","borderWidth":1.5,"stack":"s"},
+      {"label":"출시 전 평균 기준선","data":[28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492, 28931492],"type":"line","borderColor":"#e67e22","borderDash":[6,4],"borderWidth":2,"pointRadius":0,"fill":false}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'top'}, annotation:{} },
+    scales:{
+      x:{stacked:true,ticks:{maxRotation:60,font:{size:11}}},
+      y:{stacked:true,beginAtZero:true,ticks:{callback:v=>v.toLocaleString()+'원'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
